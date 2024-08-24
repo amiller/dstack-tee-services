@@ -23,9 +23,9 @@ In particular look at `app/main.py` for how it's used:
 
 and in `dstack-guest-sim/main.py` for how it can be simulated through a remote dummy fetch:
 ```python
-        appdata = 'cafebabe000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-        url = f"http://dstack-tee-services:5001/attest/{appdata}"
-	yield "tee services: " + requests.get(url).text
+    url = f"https://dcap-dummy.sirrah.suave.flashbots.net/dcap/{appdata}"
+    req = Request(url, headers={'User-Agent' : "Magic Browser"})
+    obj = urlopen(req).read().decode('utf-8')
 ```
 
 - A corresponding verifier remains TODO. This would simply consist of carrying forward the domain separation.
