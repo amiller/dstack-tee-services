@@ -1,8 +1,17 @@
-from flask import Flask
+from flask import Flask, Response, request
 app = Flask(__name__)
 import socket
 print(socket.gethostname())
 from urllib.request import urlopen, Request
+import subprocess
+import pydig
+
+def reverse_dns_lookup(ip_address):
+    try:
+        result = socket.gethostbyaddr(ip_address)
+        return result[0]
+    except socket.herror:
+        return "Unable to perform reverse DNS lookup"
 
 def get_mock_attestation(appdata):
     url = f"https://dcap-dummy.sirrah.suave.flashbots.net/dcap/{appdata}"
@@ -13,7 +22,15 @@ def get_mock_attestation(appdata):
 
 @app.route("/")
 def hello():
-    return "Hello from dstack simulated TEE service! hostname: " + socket.gethostname()
+    client_ip = request.remote_addr
+    def generate():
+        yield "Hello, from dstack simulated TEE service! \n"
+        yield "hostname: " + socket.gethostname() + '\n'
+        yield f"Your IP address is: {client_ip}" + '\n'
+        hostname = reverse_dns_lookup(client_ip)
+        yield f"PTR record for {client_ip}: {hostname}"
+
+    return Response(generate(), mimetype='text/plain')
 
 @app.route("/attest/<appdata>")
 def attest(appdata):

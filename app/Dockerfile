@@ -7,9 +7,11 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 
 RUN mkdir /app
 WORKDIR /app
-ADD main.py /app/
+
 ADD requirements.txt /app/
 RUN pip install -r requirements.txt
+
+ADD main.py /app/
 
 EXPOSE 5000
 ENTRYPOINT []
