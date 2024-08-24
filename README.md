@@ -18,7 +18,7 @@ This provides a single feature:
 In particular look at `app/main.py` for how it's used:
   ```python
         appdata = 'cafebabe000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-        url = f"http://dstack-tee-services:5001/attest/{appdata}"  
+        url = f"http://dstack-tee-services/attest/{appdata}"  
   ```
 
 and in `dstack-guest-sim/main.py` for how it can be simulated through a remote dummy fetch:
