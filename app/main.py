@@ -17,7 +17,9 @@ def hello():
         yield "Hello from dstack-app!\n"
         yield "hostname: " + socket.gethostname() + "\n"
         yield "cast block latest:" + latest() + "\n"
-        yield "tee services: " + requests.get("http://dstack-tee-services:5001/attest/").text
+        appdata = 'cafebabe000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+        url = f"http://dstack-tee-services:5001/attest/{appdata}"
+        yield "tee services: " + requests.get(url).text
 
     return Response(generate(), mimetype='text/plain')
 
