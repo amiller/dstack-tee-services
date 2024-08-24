@@ -5,6 +5,7 @@ print(socket.gethostname())
 from urllib.request import urlopen, Request
 import subprocess
 import pydig
+import hashlib
 
 def reverse_dns_lookup(ip_address):
     try:
@@ -19,7 +20,6 @@ def get_mock_attestation(appdata):
     obj = urlopen(req).read().decode('utf-8')
     return obj + '\n'
 
-
 @app.route("/")
 def hello():
     client_ip = request.remote_addr
@@ -32,10 +32,22 @@ def hello():
 
     return Response(generate(), mimetype='text/plain')
 
+@app.route("/what/ip")
+def whatismyip():
+    return request.remote_addr
+
+@app.route("/what/hostname")
+def whatismyhostname():
+    return reverse_dns_lookup(request.remote_addr)
+
 @app.route("/attest/<appdata>")
 def attest(appdata):
     assert len(bytes.fromhex(appdata)) == 64
-    return get_mock_attestation(appdata)
+    # Domain extension by hostname
+    client_ip = request.remote_addr
+    hostname = reverse_dns_lookup(client_ip)
+    newappdata = hashlib.sha256((hostname + appdata).encode('utf-8')).hexdigest()*2
+    return get_mock_attestation(newappdata)
 
 @app.route("/attest/")
 def attest_index():
