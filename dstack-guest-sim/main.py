@@ -42,7 +42,7 @@ def whatismyhostname():
 
 @app.route("/attest/<appdata>")
 def attest(appdata):
-    assert len(bytes.fromhex(appdata)) == 64
+    assert len(bytes.fromhex(appdata)) == 32
     # Domain extension by hostname
     client_ip = request.remote_addr
     hostname = reverse_dns_lookup(client_ip)
@@ -51,8 +51,8 @@ def attest(appdata):
 
 @app.route("/attest/")
 def attest_index():
-    return "attestation! Try appending a 64-byte userdata " + \
-        " attest/cafebabe000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    return "attestation! Try appending a 32-byte userdata " + \
+        " attest/cafebabe00000000000000000000000000000000000000000000000000000000"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5001)

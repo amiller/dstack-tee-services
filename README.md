@@ -2,14 +2,15 @@
 
 `deployment-sim.yaml`:
 
- This sets up two deployments, the `app` and the `guest services` instantiated using a simuator.
+ This sets up two deployments, the `app` and the `guest services`.
+ Here the guest services is instantiated using a mock remote attestation environment.
 
 ## Remote attestation interface
 
 This provides a single feature:
 
 - `/attest/{appdata}`
-  The single argument `appdata` should be 64 bytes of hex encoded data
+  The single argument `appdata` should be 32 bytes of hex encoded data
 
   This returns a quote appropriate for the enclave environment it's running in.
 
@@ -17,7 +18,7 @@ This provides a single feature:
 
 In particular look at `app/main.py` for how it's used:
   ```python
-        appdata = 'cafebabe000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+        appdata = 'cafebabe00000000000000000000000000000000000000000000000000000000'
         url = f"http://dstack-tee-services/attest/{appdata}"  
   ```
 
