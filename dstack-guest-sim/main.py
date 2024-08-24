@@ -13,7 +13,7 @@ def attest(userdata):
 
 @app.route("/attest/")
 def attest_index():
-    NotImplemented
+    return "attestation! Try appending a 64-byte userdata"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5001)

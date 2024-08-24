@@ -56,7 +56,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: dstack-guest-services-service
+  name: dstack-tee-services
 spec:
   type: NodePort
   selector:

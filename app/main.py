@@ -4,6 +4,8 @@ app = Flask(__name__)
 import socket
 import subprocess
 
+import requests
+
 def latest():
     cmd = "cast block-number --flashbots"
     return subprocess.check_output(cmd, shell=True).decode('utf-8')
@@ -14,7 +16,8 @@ def hello():
     def generate():
         yield "Hello from dstack-app!\n"
         yield "hostname: " + socket.gethostname() + "\n"
-        yield "cast block latest:" + latest()
+        yield "cast block latest:" + latest() + "\n"
+        yield "tee services: " + requests.get("http://dstack-tee-services:5001/attest/").text
 
     return Response(generate(), mimetype='text/plain')
 
