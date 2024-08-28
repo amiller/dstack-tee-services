@@ -19,9 +19,14 @@ RUN pip install sgx-dcap-quote-verify-python
 WORKDIR /root/
 RUN git clone https://github.com/intel/SGX-TDX-DCAP-QuoteVerificationLibrary
 WORKDIR SGX-TDX-DCAP-QuoteVerificationLibrary/Src
-RUN ./release
+# RUN ./release
+
+WORKDIR /root/
+RUN pip install flask requests eth_account
+ADD main.py ./
 
 # Define entrypoint
+EXPOSE 5003
 ENTRYPOINT []
-CMD ["bash"]
+CMD ["python3", "main.py"]
 

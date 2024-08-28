@@ -15,9 +15,9 @@ def reverse_dns_lookup(ip_address):
         return "Unable to perform reverse DNS lookup"
 
 def get_mock_attestation(appdata):
-    url = f"https://dcap-dummy.sirrah.suave.flashbots.net/dcap/{appdata}"
+    url = f"http://ns31695324.ip-141-94-163.eu:10080/attestation/{appdata}"
     req = Request(url, headers={'User-Agent' : "Magic Browser"})
-    obj = urlopen(req).read().decode('utf-8')
+    obj = urlopen(req).read().hex()
     return obj + '\n'
 
 @app.route("/")

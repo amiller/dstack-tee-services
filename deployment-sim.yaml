@@ -2,6 +2,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: dstack-keymanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dstack-keymanager
+  template:
+    metadata:
+      labels:
+        app: dstack-keymanager
+    spec:
+      containers:
+      - name: dstack-keymanager
+        image: dstack-keymanager:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dstack-keymanager-service
+spec:
+  type: NodePort
+  selector:
+    app: dstack-keymanager
+  ports:
+  - port: 5003
+    targetPort: 5003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: dstack-app
 spec:
   replicas: 1
