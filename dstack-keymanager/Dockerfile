@@ -1,11 +1,7 @@
 FROM ubuntu:jammy AS builder
 
-RUN apt-get update && apt-get install -y libssl-dev libcurl4-openssl-dev cmake rustc cargo vim
+RUN apt-get update
 RUN apt-get install -y git wget
-
-# RUN git clone https://github.com/intel/SGX-TDX-DCAP-QuoteVerificationLibrary/
-# WORKDIR SGX-TDX-DCAP-QuoteVerificationLibrary/Src
-# RUN apt-get install -y build-essential ocaml ocamlbuild automake autoconf libtool wget python-is-python3 libssl-dev git cmake perl
 
 # Install pre-built Intel DCAP local repo
 WORKDIR /
@@ -15,11 +11,15 @@ RUN echo "deb [trusted=yes arch=amd64] file:/sgx_debian_local_repo jammy main" >
 
 RUN apt-get update
 RUN apt-get -y install sgx-pck-id-retrieval-tool libsgx-dcap-default-qpl tdx-qgs libtdx-attest
+RUN apt-get -y install python3-pip cmake
+RUN pip install sgx-dcap-quote-verify-python
 
 # Try building some sample program for verifying a quote
 
-# WORKDIR /
-# RUN git clone https://github.com/intel/SGXDataCenterAttestationPrimitives
+WORKDIR /root/
+RUN git clone https://github.com/intel/SGX-TDX-DCAP-QuoteVerificationLibrary
+WORKDIR SGX-TDX-DCAP-QuoteVerificationLibrary/Src
+RUN ./release
 
 # Define entrypoint
 ENTRYPOINT []
