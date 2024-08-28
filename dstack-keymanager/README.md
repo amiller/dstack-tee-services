@@ -17,7 +17,7 @@ This provides a very small number of interfaces that pods in the container can a
 
 ### Persistent key
 
-`http://dstack-keymanager/sealkey`
+- `http://dstack-keymanager/sealkey`
 
 This provides a sealing key, uniquely derived for each pod that invokes it.
 Further key derivation within a pod is up to that pod to do for itself.
@@ -26,12 +26,16 @@ Further key derivation within a pod is up to that pod to do for itself.
 ### Ethereum-friendly attestation
 
 Once the `dstack` instance is registered, you can use it to carry out nested attestation in an Ethereum-friendly way.
+Since the enclave already has a private key, we simply sign the transaction with that key.
+The provided `appdata` is combined with the hostname and included in the message to be signed.
 
-`dstack-keymanager/attest/<appdata>`
+- `http://dstack-keymanager/attest/<appdata>` (from another pod)
 
 The resulting signature can be verified in Solidity using the contract:
 
-`keymanager.verifyAttestation(hostname, appdata, sig)`
+```solidity
+keymanager.verifyAttestation(hostname, appdata, sig)
+```
 
 ## How it works
 
@@ -50,7 +54,7 @@ Tools in this repo are provided to do this, but this doesn't doesn't have to hap
 
 As a host, you can ask the key manager to initialize the contract:
 
-- `dstack-keymanager/bootstrap`
+- `http://dstack-keymanager/bootstrap` (from another pod)
 
 This produces a master secret key, the public key of which will be associated with the contract.
 
@@ -64,14 +68,14 @@ Since the default Goerli instance is already bootstrapped, you'll have to run yo
 When you (the host) first start your enclave, you need to join it to the network.
 This requires providing a remote attestation of blob data along with the request.
 
-- `dstack-keymanager/register`
+- `http://dstack-keymanager/register`
 
 If the session has not been established yet, generate a public key, request a copy of the master
 secret encrypted to this public key.
 
 Later when an encrypted key is obtained, either via a blob submitted in response,
 
-- `dstack-keymanager/register/<enckey>`
+- `http://dstack-keymanager/register/<enckey>`
 
 
 ### Help others onboard
@@ -80,7 +84,7 @@ Some existing registered enclave needs to reply to valid registrations by provid
 
 The easiest way is using blobs.
 
-- `dstack-keymanager/helper/<addr>`
+- `http://dstack-keymanager/helper/<addr>`
 
  can be called by the host to produce an enckey for the newly joined node.
  This can be posted on-chain, along with an attestation.
