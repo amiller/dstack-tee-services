@@ -1,6 +1,16 @@
 This is a minimalist key management service for pods in the Tstack.
 
-It uses the Ethereum Goerli testnet as an on-chain registry.
+It's inspired by the `/dev/attestation/` and `/dev/attestation/keys/` interface from Gramine,
+which are very devex friendly.
+from Gramine [(docs)](https://gramine.readthedocs.io/en/stable/devel/features.html#list-of-pseudo-files)
+
+It uses the Ethereum Goerli testnet as an on-chain registry, but application developers won't need to worry about this.
+
+Compared to the on-chain Key Manager in Sirrah, this is fairly different.
+Instead of contracts, the main unit of composition is pods.
+There is still an important on-chain smart contract, but it's more simple since more of the work is done in the key manager microservice itself.
+
+There are no precompiles, I love you
 
 ## Interfaces
 This provides a very small number of interfaces that pods in the container can access.
@@ -9,7 +19,8 @@ This provides a very small number of interfaces that pods in the container can a
 
 `http://dstack-keymanager/sealkey`
 
-This provides a sealing key. Further key derivation is up to you
+This provides a sealing key, uniquely derived for each pod that invokes it.
+Further key derivation within a pod is up to that pod to do for itself.
 
 
 ### Ethereum-friendly attestation
