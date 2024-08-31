@@ -15,9 +15,10 @@ def reverse_dns_lookup(ip_address):
         return "Unable to perform reverse DNS lookup"
 
 def get_mock_attestation(appdata):
-    url = f"http://ns31695324.ip-141-94-163.eu:10080/attestation/{appdata}"
+    #url = f"http://ns31695324.ip-141-94-163.eu:10080/attestation/{appdata}"
+    url = f"https://mockquote.tee.cash/quote.rpy" # TODO: /{appdata}"
     req = Request(url, headers={'User-Agent' : "Magic Browser"})
-    obj = urlopen(req).read().hex()
+    obj = urlopen(req).read().decode('utf-8')[6:]
     return obj + '\n'
 
 @app.route("/")
