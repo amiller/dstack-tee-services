@@ -26,14 +26,17 @@ contract KeyManager {
     // Anyone can see the master public key
     address public xPub;
 
-    // Allowed enclave hashes
-    mapping ( bytes32 => bool ) public allowed_mrtds;
+    ///////////////////////////////////
+    // EVM-Friendly remote attestation
+    ///////////////////////////////////
 
-    // Nested remote attestation
+    /* The sig is obtained by calling
+        dstack-keymanager/attest/<appdata> */
     function verify(string memory caller, bytes32 appData, bytes memory sig) public view returns (bool) {
         bytes32 digest = keccak256(abi.encodePacked(caller, appData));
         return Secp256k1.verify(xPub, digest, sig);
     }
+    
 
     //////////////////////////////
     // Bootstrapping
@@ -56,6 +59,7 @@ contract KeyManager {
     //////////////////////////////
     // New node register phase
     //////////////////////////////
+    /*
     struct TcbInfo {
 	bytes16 fmspc;
 	bytes32 mrtd;
@@ -86,5 +90,5 @@ contract KeyManager {
     function onchain_Onboard(address addr, bytes memory ciphertext) public {
         // Note: nothing guarantees all ciphertexts on chain are valid
         emit Onboard(addr, ciphertext);
-    }
+    }*/
 }

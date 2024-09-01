@@ -24,11 +24,19 @@ contract KeyManagerTest is Test {
 	// 1. Bootstrap
 	// 1a. Simulate invoking /dstack-keymanager/bootstrap
         Vm.Wallet memory xPub = vm.createWallet("masterkey");
-	// quote = ffi fetch a tdx attestation
 
         // 1b. Post the key and attestation on-chain
+        vm.prank(vm.addr(uint(keccak256("KeyManager.t.sol"))));	
         keymgr.bootstrap(xPub.addr);
 
+	// Check a signature
+	bytes32 appdata = bytes32("0xcafe");
+        bytes32 digest = keccak256(abi.encodePacked("dstack", appdata));
+	(uint8 v, bytes32 r, bytes32 s) = vm.sign(xPub, digest);
+	bytes memory sig = abi.encodePacked(v,r,s);
+        assert(keymgr.verify("dstack", appdata, sig));
+
+	/*
         // 2. Register a new node
         // 2a. Simulate invoking /dstack-keymanager/register
 	Vm.Wallet memory myPub = vm.createWallet("ephem");
@@ -44,6 +52,7 @@ contract KeyManagerTest is Test {
 	
         // 3b. Onchain post the ciphertext
         //keymgr.onboard(bob_kettle, ciphertext);
+	*/
     }
     
 }
